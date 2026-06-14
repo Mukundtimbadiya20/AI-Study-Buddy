@@ -310,20 +310,6 @@ This project demonstrates:
 
 ---
 
-## 📸 Demo
-
-Upload your screenshots here.
-
-```text
-screenshots/
-├── home.png
-├── summary.png
-├── quiz.png
-└── chatbot.png
-```
-
----
-
 ## 👨‍💻 Author
 
 Mukund Timbadiya
