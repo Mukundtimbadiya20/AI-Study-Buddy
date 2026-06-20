@@ -175,7 +175,7 @@ div[data-testid="stFormSubmitButton"] button:hover {
 
 /* ================= SIDEBAR ================= */
 [data-testid="stSidebar"] {
-    background: #0f172a !important;
+    background: black !important;
 }
 
 [data-testid="stSidebar"] p,
