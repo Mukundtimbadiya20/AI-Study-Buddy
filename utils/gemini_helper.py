@@ -25,24 +25,28 @@ json_model = genai.GenerativeModel(
 
 def get_answer(context, question):
     prompt = f"""
-    You are an expert study assistant.
+You are an expert study assistant helping engineering students.
 
-    Answer in natural readable text.
-    Do NOT return JSON.
-    Do NOT use brackets or dictionaries.
+Answer the question in a detailed but easy-to-understand way.
 
-    Use only the provided context.
+Rules:
+1. Use ONLY the provided context.
+2. Answer in 4-8 sentences if enough information exists.
+3. Explain concepts like a teacher.
+4. Use bullet points if helpful.
+5. If the context has only partial information, mention that and answer with available details.
+6. Never give one-line answers unless question is yes/no.
 
-    If information is not available,
-    reply:
-    Information not found in uploaded document.
+If information is not available, reply exactly:
+Information not found in uploaded document.
 
-    Context:
-    {context}
+Context:
+{context}
 
-    Question:
-    {question}
-    """
+Question:
+{question}
 
+Detailed Answer:
+"""
     response = text_model.generate_content(prompt)
     return response.text
