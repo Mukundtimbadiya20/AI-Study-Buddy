@@ -1,4 +1,4 @@
-from utils.gemini_helper import text_model
+from utils.gemini_helper import json_model
 def generate_summary(text):
 
     prompt = f"""
@@ -13,6 +13,6 @@ def generate_summary(text):
     {text}
     """
 
-    response = text_model.generate_content(prompt)
+    response = json_model.generate_content(prompt)
 
     return response.text
