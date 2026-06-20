@@ -31,7 +31,7 @@ st.markdown("""
     --secondary: #3b82f6;
 }
 
-/* Main app */
+/* ================= MAIN APP ================= */
 .stApp {
     background: linear-gradient(135deg, #eef4ff 0%, #f8fbff 50%, #edf8f3 100%);
     color: var(--text);
@@ -40,10 +40,10 @@ st.markdown("""
 
 /* Global text */
 html, body, p, span, div, label, li, h1, h2, h3, h4, h5 {
-    color: #111827 !important;
+    color: #111827;
 }
 
-/* Hero */
+/* ================= HERO ================= */
 .hero {
     background: linear-gradient(135deg, #1d4ed8, #3b82f6);
     color: white !important;
@@ -53,11 +53,12 @@ html, body, p, span, div, label, li, h1, h2, h3, h4, h5 {
     box-shadow: 0 15px 35px rgba(37,99,235,0.25);
 }
 
-.hero h1, .hero p {
+.hero h1,
+.hero p {
     color: white !important;
 }
 
-/* Cards */
+/* ================= CARDS ================= */
 .card {
     background: white;
     border: 1px solid #dbe4ee;
@@ -67,7 +68,7 @@ html, body, p, span, div, label, li, h1, h2, h3, h4, h5 {
     box-shadow: 0 10px 30px rgba(0,0,0,0.06);
 }
 
-/* Chips */
+/* ================= CHIPS ================= */
 .chip {
     display: inline-block;
     padding: 8px 14px;
@@ -79,7 +80,7 @@ html, body, p, span, div, label, li, h1, h2, h3, h4, h5 {
     font-weight: 600;
 }
 
-/* Metrics */
+/* ================= METRICS ================= */
 .metric {
     background: white;
     border-radius: 16px;
@@ -99,7 +100,7 @@ html, body, p, span, div, label, li, h1, h2, h3, h4, h5 {
     font-weight: bold;
 }
 
-/* Buttons */
+/* ================= BUTTONS ================= */
 .stButton > button,
 div[data-testid="stFormSubmitButton"] button {
     width: 100%;
@@ -117,7 +118,7 @@ div[data-testid="stFormSubmitButton"] button:hover {
     transform: translateY(-2px);
 }
 
-/* Input */
+/* ================= INPUT ================= */
 .stTextInput input,
 .stTextArea textarea {
     background: white !important;
@@ -126,7 +127,7 @@ div[data-testid="stFormSubmitButton"] button:hover {
     border-radius: 12px !important;
 }
 
-/* File uploader */
+/* ================= FILE UPLOADER ================= */
 [data-testid="stFileUploader"] {
     background: #ffffff !important;
     border: 2px dashed #3b82f6 !important;
@@ -138,7 +139,12 @@ div[data-testid="stFormSubmitButton"] button:hover {
     background: #ffffff !important;
 }
 
-/* Tabs */
+[data-testid="stFileUploader"] button {
+    background: #2563eb !important;
+    color: white !important;
+}
+
+/* ================= TABS ================= */
 [data-baseweb="tab-list"] {
     gap: 12px !important;
     background: transparent !important;
@@ -167,12 +173,11 @@ div[data-testid="stFormSubmitButton"] button:hover {
     border: none !important;
 }
 
-/* Sidebar */
+/* ================= SIDEBAR ================= */
 [data-testid="stSidebar"] {
     background: #0f172a !important;
 }
 
-/* Sidebar text only */
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] label,
 [data-testid="stSidebar"] span,
@@ -182,19 +187,28 @@ div[data-testid="stFormSubmitButton"] button:hover {
     color: white !important;
 }
 
-/* Sidebar arrow / hamburger icon */
+/* SIDEBAR COLLAPSE BUTTON */
 button[kind="header"] {
-    color: white !important;
+    background: transparent !important;
 }
 
 button[kind="header"] svg {
     fill: white !important;
     stroke: white !important;
     color: white !important;
-    opacity: 10 !important;
+    opacity: 1 !important;
 }
 
-/* Chunk cards */
+/* Newer Streamlit versions */
+[data-testid="collapsedControl"] svg,
+[data-testid="stSidebarCollapsedControl"] svg {
+    fill: white !important;
+    stroke: white !important;
+    color: white !important;
+    opacity: 1 !important;
+}
+
+/* ================= CHUNKS ================= */
 .chunk-card {
     background: #f8fafc;
     border-left: 4px solid #2563eb;
@@ -203,13 +217,14 @@ button[kind="header"] svg {
     margin-bottom: 12px;
 }
 
-/* Success box */
+/* ================= NOTIFICATION ================= */
 [data-baseweb="notification"] {
     background: #eff6ff !important;
     border-left: 5px solid #2563eb !important;
 }
 
-/* Spinner */
+/* ================= SPINNER ================= */
+[data-testid="stSpinner"] svg,
 [data-testid="stSpinner"] * {
     stroke: #2563eb !important;
     fill: #2563eb !important;
