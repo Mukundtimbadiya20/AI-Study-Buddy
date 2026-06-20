@@ -426,53 +426,117 @@ with quiz_tab:
 
 with qa_tab:
     st.markdown('<div class="card">', unsafe_allow_html=True)
+
     with st.form("qa_form"):
         question = st.text_input(
             "Ask a question about this document",
             placeholder="What are the key takeaways from this chapter?",
         )
-        submit_question = st.form_submit_button("Get Answer", use_container_width=True)
+        submit_question = st.form_submit_button(
+            "Get Answer",
+            use_container_width=True
+        )
 
     if submit_question and question.strip():
-        with st.spinner("Searching relevant chunks..."):
-            results = db.similarity_search(question, k=top_k)
-            context = "\n\n".join([doc.page_content for doc in results])
 
-        with st.spinner("Generating answer..."):
+        # DEBUG 1
+        st.write("DEBUG 1: Question submitted")
+
+        # ===============================
+        # Similarity Search
+        # ===============================
+        with st.spinner("Searching relevant chunks..."):
             try:
-                answer = get_answer(context, question)
-            except ResourceExhausted as exc:
-                st.warning(f"Gemini quota is temporarily exhausted. {exc}")
-            else:
-                st.markdown(
-                    f"""
-                    <div style="
-                        background:white;
-                        padding:22px;
-                        border-radius:16px;
-                        border-left:5px solid #2563eb;
-                        box-shadow:0 8px 25px rgba(0,0,0,0.06);
-                        line-height:1.8;
-                        font-size:16px;
-                        color:#111827;
-                    ">
-                    <b>&#129302; AI Answer</b><br><br>
-                    {answer}
-                    </div>
-                    """,
-                    unsafe_allow_html=True
+                st.write("DEBUG 2: Starting similarity search")
+
+                results = db.similarity_search(question, k=top_k)
+
+                st.write("DEBUG 3: Similarity search finished")
+                st.write("Retrieved chunks:", len(results))
+
+                context = "\n\n".join(
+                    [doc.page_content for doc in results]
                 )
-                update_state(f"last_results_{doc_key}", results)
+
+                st.write("Context length:", len(context))
+
+            except Exception as e:
+                st.error(f"Similarity search failed: {e}")
+                results = []
+                context = ""
+
+        # ===============================
+        # Gemini Answer
+        # ===============================
+        if context:
+            with st.spinner("Generating answer..."):
+                try:
+                    st.write("DEBUG 4: Calling Gemini")
+
+                    answer = get_answer(context, question)
+
+                    st.write("DEBUG 5: Gemini returned")
+
+                    if not answer:
+                        st.warning("Gemini returned empty response")
+                    else:
+                        st.markdown(
+                            f"""
+                            <div style="
+                                background:white;
+                                padding:22px;
+                                border-radius:16px;
+                                border-left:5px solid #2563eb;
+                                box-shadow:0 8px 25px rgba(0,0,0,0.06);
+                                line-height:1.8;
+                                font-size:16px;
+                                color:#111827;
+                            ">
+                            <b>&#129302; AI Answer</b><br><br>
+                            {answer}
+                            </div>
+                            """,
+                            unsafe_allow_html=True
+                        )
+
+                    update_state(
+                        f"last_results_{doc_key}",
+                        results
+                    )
+
+                except ResourceExhausted as exc:
+                    st.warning(
+                        f"Gemini quota exhausted: {exc}"
+                    )
+
+                except Exception as e:
+                    st.error(f"Gemini failed: {e}")
+
+        else:
+            st.warning("No context found for this question.")
 
     if show_context:
-        last_results = st.session_state.get(f"last_results_{doc_key}", [])
+        last_results = st.session_state.get(
+            f"last_results_{doc_key}",
+            []
+        )
+
         if last_results:
-            with st.expander("View Retrieved Context", expanded=False):
+            with st.expander(
+                "View Retrieved Context",
+                expanded=False
+            ):
                 for idx, doc in enumerate(last_results, start=1):
                     st.markdown(
-                        f'<div class="chunk-card"><b>Chunk {idx}</b><br>{doc.page_content}</div>',
+                        f"""
+                        <div class="chunk-card">
+                            <b>Chunk {idx}</b><br>
+                            {doc.page_content}
+                        </div>
+                        """,
                         unsafe_allow_html=True,
                     )
+
     st.markdown("</div>", unsafe_allow_html=True)
 
 with preview_tab:
