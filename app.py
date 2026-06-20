@@ -134,29 +134,17 @@ div[data-testid="stFormSubmitButton"] button:hover {
     padding: 20px !important;
 }
 
-[data-testid="stFileUploader"] * {
-    color: #111827 !important;
-}
-
 [data-testid="stFileUploader"] section {
     background: #ffffff !important;
 }
 
-[data-testid="stFileUploader"] button {
-    background: #2563eb !important;
-    color: white !important;
-    border-radius: 10px !important;
-    border: none !important;
-}
-
-/* Tabs container */
+/* Tabs */
 [data-baseweb="tab-list"] {
     gap: 12px !important;
     background: transparent !important;
     padding: 8px 0 !important;
 }
 
-/* Each tab */
 [data-baseweb="tab"] {
     height: 50px !important;
     padding: 0 24px !important;
@@ -166,29 +154,39 @@ div[data-testid="stFormSubmitButton"] button:hover {
     color: #475569 !important;
     font-size: 16px !important;
     font-weight: 600 !important;
-    transition: all 0.3s ease !important;
 }
 
-/* Hover */
 [data-baseweb="tab"]:hover {
     background: #eff6ff !important;
     color: #2563eb !important;
 }
 
-/* Active tab */
 [data-baseweb="tab"][aria-selected="true"] {
     background: linear-gradient(135deg, #2563eb, #3b82f6) !important;
     color: white !important;
     border: none !important;
-    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
 }
+
 /* Sidebar */
 [data-testid="stSidebar"] {
     background: #0f172a !important;
 }
 
-[data-testid="stSidebar"] * {
+/* Sidebar text only */
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] span,
+[data-testid="stSidebar"] h1,
+[data-testid="stSidebar"] h2,
+[data-testid="stSidebar"] h3 {
     color: white !important;
+}
+
+/* Sidebar arrow fix */
+button[kind="header"] svg {
+    fill: white !important;
+    stroke: white !important;
+    opacity: 1 !important;
 }
 
 /* Chunk cards */
@@ -207,8 +205,11 @@ div[data-testid="stFormSubmitButton"] button:hover {
 }
 
 /* Spinner */
-[data-testid="stSpinner"] svg {
+[data-testid="stSpinner"] * {
     stroke: #2563eb !important;
+    fill: #2563eb !important;
+    color: #2563eb !important;
+    opacity: 1 !important;
 }
 </style>
 """, unsafe_allow_html=True)
