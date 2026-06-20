@@ -182,10 +182,15 @@ div[data-testid="stFormSubmitButton"] button:hover {
     color: white !important;
 }
 
-/* Sidebar arrow fix */
+/* Sidebar arrow / hamburger icon */
+button[kind="header"] {
+    color: white !important;
+}
+
 button[kind="header"] svg {
     fill: white !important;
     stroke: white !important;
+    color: white !important;
     opacity: 1 !important;
 }
 
