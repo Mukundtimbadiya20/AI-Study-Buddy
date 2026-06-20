@@ -189,7 +189,7 @@ div[data-testid="stFormSubmitButton"] button:hover {
 
 /* SIDEBAR COLLAPSE BUTTON */
 button[kind="header"] {
-    background: transparent !important;
+    background:white !important;
 }
 
 button[kind="header"] svg {
