@@ -439,19 +439,17 @@ with qa_tab:
 
     if submit_question and question.strip():
 
-        # DEBUG 1
-        st.write("DEBUG 1: Question submitted")
 
         # ===============================
         # Similarity Search
         # ===============================
         with st.spinner("Searching relevant chunks..."):
             try:
-                st.write("DEBUG 2: Starting similarity search")
+                
 
                 results = db.similarity_search(question, k=top_k)
 
-                st.write("DEBUG 3: Similarity search finished")
+                st.write("Similarity search finished")
                 st.write("Retrieved chunks:", len(results))
 
                 context = "\n\n".join(
@@ -471,11 +469,11 @@ with qa_tab:
         if context:
             with st.spinner("Generating answer..."):
                 try:
-                    st.write("DEBUG 4: Calling Gemini")
+                    st.write("Calling Gemini")
 
                     answer = get_answer(context, question)
 
-                    st.write("DEBUG 5: Gemini returned")
+                    
 
                     if not answer:
                         st.warning("Gemini returned empty response")
