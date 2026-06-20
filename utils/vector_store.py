@@ -3,6 +3,13 @@ try:
 except Exception:
     Chroma = None
 
+import hashlib
+
+
+def _chunk_id(text):
+    return hashlib.sha1(text.encode("utf-8")).hexdigest()
+
+
 class SimpleChromaWrapper:
     def __init__(self, collection, embeddings):
         self.collection = collection
@@ -16,11 +23,13 @@ class SimpleChromaWrapper:
             q_emb = self._embeddings.embed_documents([query])[0]
 
         res = self.collection.query(query_embeddings=[q_emb], n_results=k)
-        docs = res.get('documents') or res.get('results')
-        if isinstance(docs, list) and len(docs) > 0 and isinstance(docs[0], list):
+        docs = res.get("documents") or res.get("results") or []
+        if isinstance(docs, list) and docs and isinstance(docs[0], list):
             docs = docs[0]
+
         results = []
         from types import SimpleNamespace
+
         for d in docs:
             results.append(SimpleNamespace(page_content=d))
         return results
@@ -36,8 +45,13 @@ def create_vector_store(chunks, embeddings, persist_directory=None):
 
     # Fallback: use chromadb directly
     import chromadb
-    client = chromadb.Client()
-    # create or get a collection
+
+    if persist_directory:
+        client = chromadb.PersistentClient(path=persist_directory)
+    else:
+        client = chromadb.Client()
+
+    # Create or get a collection
     try:
         collection = client.get_collection(name="ai_study_buddy")
     except Exception:
@@ -50,13 +64,7 @@ def create_vector_store(chunks, embeddings, persist_directory=None):
         # If the embedding object uses a different method name
         embeddings_list = [embeddings.embed_query(c) for c in chunks]
 
-    ids = [str(i) for i in range(len(chunks))]
-    # ensure we don't re-add duplicates: clear existing collection
-    try:
-        collection.delete(ids=[c['id'] for c in collection.peek()])
-    except Exception:
-        pass
-
-    collection.add(ids=ids, documents=chunks, embeddings=embeddings_list)
+    ids = [_chunk_id(chunk) for chunk in chunks]
+    collection.upsert(ids=ids, documents=chunks, embeddings=embeddings_list)
 
     return SimpleChromaWrapper(collection, embeddings)
