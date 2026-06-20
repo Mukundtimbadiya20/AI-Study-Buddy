@@ -295,8 +295,10 @@ if not text or not text.strip():
 with st.spinner("Preparing searchable chunks..."):
     chunks = chunk_document(text, chunk_size, chunk_overlap)
 
+
+
 if not chunks:
-    st.error("Could not create chunks from this document. Try reducing chunk size.")
+    st.error("No valid text chunks found in uploaded document.")
     st.stop()
 
 doc_key = hashlib.sha1(file_bytes).hexdigest()[:12]
@@ -314,7 +316,7 @@ with col2:
 with col3:
     st.markdown(f'<div class="metric"><div class="label">Retriever Top-K</div><div class="value">{top_k}</div></div>', unsafe_allow_html=True)
 
-summary_tab, quiz_tab, qa_tab, preview_tab = st.tabs(["📝 Summary", "🧠 Quiz", "🤖 Ask AI", "📄 Preview"])
+summary_tab, quiz_tab, qa_tab, preview_tab = st.tabs(["?? Summary", "?? Quiz", "?? Ask AI", "?? Preview"])
 
 with summary_tab:
     st.markdown('<div class="card">', unsafe_allow_html=True)
@@ -400,10 +402,13 @@ with preview_tab:
     st.text_area(
         "Extracted text preview",
         value=text[:preview_chars],
-        height=380,
+        height=380,
+
         label_visibility="collapsed",
     )
     st.markdown("</div>", unsafe_allow_html=True)
+
+
 
 
 
