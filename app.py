@@ -12,6 +12,7 @@ from utils.quiz import generate_quiz
 from utils.summary import generate_summary
 from utils.vector_store import create_vector_store
 
+
 st.set_page_config(
     page_title="AI Study Buddy",
     page_icon=":books:",
@@ -316,7 +317,7 @@ with col2:
 with col3:
     st.markdown(f'<div class="metric"><div class="label">Retriever Top-K</div><div class="value">{top_k}</div></div>', unsafe_allow_html=True)
 
-summary_tab, quiz_tab, qa_tab, preview_tab = st.tabs(["?? Summary", "?? Quiz", "?? Ask AI", "?? Preview"])
+summary_tab, quiz_tab, qa_tab, preview_tab = st.tabs(["Summary", "Quiz", "Ask AI", "Preview"])
 
 with summary_tab:
     st.markdown('<div class="card">', unsafe_allow_html=True)
@@ -334,16 +335,93 @@ with summary_tab:
 
 with quiz_tab:
     st.markdown('<div class="card">', unsafe_allow_html=True)
+
+    # Generate Quiz Button
     if st.button("Generate Quiz", use_container_width=True):
         with st.spinner("Generating quiz..."):
             try:
-                update_state(f"quiz_{doc_key}", generate_quiz(text))
+                quiz_data = generate_quiz(text)
+                st.session_state[f"quiz_{doc_key}"] = quiz_data
             except ResourceExhausted as exc:
                 st.warning(f"Gemini quota is temporarily exhausted. {exc}")
+            except Exception as e:
+                st.error(f"Error generating quiz: {e}")
 
     saved_quiz = st.session_state.get(f"quiz_{doc_key}")
+
     if saved_quiz:
-        st.markdown(saved_quiz)
+
+        # ===============================
+        # CASE 1: Quiz is JSON / dict
+        # ===============================
+        if isinstance(saved_quiz, dict):
+
+            # MCQs
+            st.subheader("📝 Multiple Choice Questions")
+
+            for i, mcq in enumerate(saved_quiz.get("mcqs", []), 1):
+                st.markdown(f"### Q{i}. {mcq['question']}")
+
+                options = [
+                    f"A. {mcq['options']['A']}",
+                    f"B. {mcq['options']['B']}",
+                    f"C. {mcq['options']['C']}",
+                    f"D. {mcq['options']['D']}",
+                ]
+
+                st.radio(
+                    "Choose one:",
+                    options,
+                    key=f"mcq_{i}"
+                )
+
+                if st.button(f"Show Answer {i}", key=f"ans_{i}"):
+                    st.success(
+                        f"Correct Answer: {mcq['correct_answer']}"
+                    )
+
+                st.divider()
+
+            # True / False
+            st.subheader("✅ True / False")
+
+            for i, tf in enumerate(saved_quiz.get("true_false", []), 1):
+                st.markdown(f"**{i}. {tf['question']}**")
+                st.radio(
+                    "Select",
+                    ["True", "False"],
+                    key=f"tf_{i}"
+                )
+
+            # Fill in the blanks
+            st.subheader("✍ Fill in the Blanks")
+
+            for i, blank in enumerate(saved_quiz.get("fill_blanks", []), 1):
+                st.markdown(f"**{i}. {blank['question']}**")
+                st.text_input(
+                    "Your Answer",
+                    key=f"blank_{i}"
+                )
+
+        # ===============================
+        # CASE 2: Gemini returned STRING
+        # ===============================
+        else:
+            st.warning("Gemini returned plain text. Formatting output...")
+
+            formatted = saved_quiz
+
+            # Basic beautification
+            for i in range(1, 11):
+                formatted = formatted.replace(
+                    f"\n{i}.",
+                    f"\n\n### Q{i}."
+                )
+
+            formatted = formatted.replace("* ", "\n• ")
+
+            st.markdown(formatted)
+
     st.markdown("</div>", unsafe_allow_html=True)
 
 with qa_tab:
